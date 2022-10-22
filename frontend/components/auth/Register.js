@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { View, Button, TextInput } from 'react-native-web'
-import { app } from '../../firebaseConfig'
+import { View, Button, TextInput } from 'react-native'
+import { app, db } from '../../firebaseConfig'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../firebaseConfig'
+import { collection, addDoc, getDoc, doc, updateDoc, deleteDoc, setDoc } from 'firebase/firestore'
+import { async } from '@firebase/util'
 
 export class Register extends Component {
     constructor(props) {
@@ -15,13 +17,18 @@ export class Register extends Component {
         }
 
         this.onSignUp = this.onSignUp.bind(this)
+        this.usersCollectionRef = collection(db, "users")
     }
 
-    onSignUp() {
+    async onSignUp() {
+        console.log()
         const {email, password, name} = this.state
         createUserWithEmailAndPassword(auth, email, password)
         .then((result) => {
             console.log(result)
+            const userReference = doc(db, "users", auth.currentUser.uid) // database, collection, id
+            const add = async () => await setDoc(userReference, {name, email})  // adds the user to the database
+            add()
         })
         .catch((err) => {
             console.log(err)

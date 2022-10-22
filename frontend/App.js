@@ -3,10 +3,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LandingScreen from './components/auth/Landing';
 import RegisterScreen from './components/auth/Register';
 import LoginScreen from './components/auth/Login';
+import MainScreen from './components/Main';
 import React, { Component } from 'react'
 import { auth } from './firebaseConfig';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { View, Text, Button } from 'react-native';
+
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import rootReducer from './components/redux/reducers';
+import thunk from 'redux-thunk';
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const Stack = createStackNavigator() // manages screens and routes
 
@@ -56,13 +63,9 @@ export class App extends Component {
     }
 
     return(
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text>User is loggedIn</Text>
-        <Button 
-          title="log out"
-          onPress={() => signOut(auth)}
-        />
-      </View>
+      <Provider store={store}>
+        <MainScreen />
+      </Provider>
     )
   }
 }
