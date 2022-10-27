@@ -4,7 +4,7 @@ import * as MediaLibrary from 'expo-media-library'
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, Image, View, Alert } from 'react-native';
 
-export default function App() {
+export default function Add({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [cameraPermission, setCameraPermission] = useState(null);
   const [galleryPermission, setGalleryPermission] = useState(null);
@@ -85,6 +85,7 @@ export default function App() {
       <Button title='Flip Camara' style={styles.button} onPress={toggleCameraType} />
       <Button title='Pick Image From Galery' onPress={() => pickImage()} />
       <Button title='Take Picture' onPress={() => takePicture()} />
+      <Button title='Save' onPress={() => navigation.navigate("Save", {image})} />
       {image && <Image source={{uri: image}} style={{flex: 1}} />}
     </View>
   );
